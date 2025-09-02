@@ -5,8 +5,9 @@ project:
 website:
   title: "My Data Science Blog"
   description: "A blog about data science, R, Python, and analytics"
-  site-url: "https://yourusername.github.io/blog"
-  repo-url: "https://github.com/yourusername/blog"
+  site-url: "https://DannyMang.github.io/"
+  repo-url: "https://github.com/DannyMang/blog"
+  repo-actions: [edit, issue]
   
   navbar:
     left:
@@ -14,13 +15,11 @@ website:
         text: Home
       - href: about.qmd
         text: About
-      - href: posts.qmd
-        text: Posts
     right:
       - icon: github
-        href: "https://github.com/yourusername"
+        href: "https://github.com/DannyMang"
       - icon: twitter
-        href: "https://twitter.com/yourusername"
+        href: "https://twitter.com/DannyMang"
 
   sidebar:
     style: "floating"
@@ -28,7 +27,9 @@ website:
     contents:
       - href: index.qmd
         text: "Home"
-      - section: "Recent Posts"
+      - href: about.qmd
+        text: "About"
+      - section: "Examples"
         contents:
           - href: blog-post-example.qmd
             text: "Data Visualization in R"
@@ -62,5 +63,5 @@ editor: visual
 
 comments:
   giscus:
-    repo: yourusername/blog-comments
+    repo: DannyMang/blog-comments
 
