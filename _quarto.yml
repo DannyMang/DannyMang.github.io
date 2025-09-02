@@ -1,0 +1,66 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "My Data Science Blog"
+  description: "A blog about data science, R, Python, and analytics"
+  site-url: "https://yourusername.github.io/blog"
+  repo-url: "https://github.com/yourusername/blog"
+  
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: about.qmd
+        text: About
+      - href: posts.qmd
+        text: Posts
+    right:
+      - icon: github
+        href: "https://github.com/yourusername"
+      - icon: twitter
+        href: "https://twitter.com/yourusername"
+
+  sidebar:
+    style: "floating"
+    search: true
+    contents:
+      - href: index.qmd
+        text: "Home"
+      - section: "Recent Posts"
+        contents:
+          - href: blog-post-example.qmd
+            text: "Data Visualization in R"
+          - href: example.qmd
+            text: "Quarto Examples"
+
+format:
+  html:
+    theme: 
+      light: [cosmo, custom.scss]
+      dark: [cosmo, custom.scss]
+    css: styles.css
+    toc: true
+    toc-depth: 3
+    code-fold: false
+    code-tools: true
+    code-copy: true
+    highlight-style: github
+    grid:
+      sidebar-width: 250px
+      body-width: 900px
+      margin-width: 300px
+
+execute:
+  freeze: auto
+  echo: true
+  warning: false
+  message: false
+
+editor: visual
+
+comments:
+  giscus:
+    repo: yourusername/blog-comments
+

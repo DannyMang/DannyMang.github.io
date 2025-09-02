@@ -1,0 +1,186 @@
+---
+title: "Getting Started with Data Visualization in R"
+author: "Data Scientist"
+date: "2024-01-15"
+categories: [r, data-viz, tutorial]
+image: "preview.jpg"
+draft: false
+format:
+  html:
+    code-fold: false
+    code-tools: true
+---
+
+# Welcome to My Blog!
+
+Today I want to share some insights about creating effective data visualizations using R and ggplot2. This post will walk through some practical examples that you can try yourself.
+
+## Why Data Visualization Matters
+
+Data visualization is crucial because:
+
+-   It makes complex data accessible
+-   Reveals patterns and trends
+-   Enables better decision making
+-   Communicates insights effectively
+
+## Setting Up Our Environment
+
+First, let's load the necessary libraries:
+
+```{r setup}
+#| message: false
+#| warning: false
+
+library(ggplot2)
+library(dplyr)
+library(palmerpenguins)
+library(scales)
+
+# Set a consistent theme
+theme_set(theme_minimal())
+```
+
+## Exploring the Palmer Penguins Dataset
+
+We'll use the famous Palmer Penguins dataset for our examples:
+
+```{r data-explore}
+# Take a look at our data
+head(penguins)
+
+# Quick summary
+summary(penguins)
+```
+
+### Basic Scatter Plot
+
+Let's start with a simple relationship between bill length and bill depth:
+
+```{r}
+#| label: fig-basic-scatter
+#| fig-cap: "Relationship between bill length and depth"
+#| fig-width: 8
+#| fig-height: 6
+
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(color = species), size = 3, alpha = 0.8) +
+  labs(title = "Bill Length vs Bill Depth",
+       subtitle = "Palmer Penguins Dataset",
+       x = "Bill Length (mm)",
+       y = "Bill Depth (mm)",
+       color = "Species") +
+  scale_color_viridis_d()
+```
+
+### Adding Trend Lines
+
+We can enhance our plot by adding trend lines for each species:
+
+```{r}
+#| label: fig-trends
+#| fig-cap: "Scatter plot with trend lines by species"
+#| fig-width: 8
+#| fig-height: 6
+
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point(size = 3, alpha = 0.7) +
+  geom_smooth(method = "lm", se = TRUE) +
+  facet_wrap(~species) +
+  labs(title = "Bill Dimensions by Species",
+       x = "Bill Length (mm)",
+       y = "Bill Depth (mm)") +
+  scale_color_viridis_d() +
+  theme(legend.position = "none")
+```
+
+## Distribution Analysis
+
+Let's examine the distribution of body mass across species:
+
+```{r}
+#| label: fig-distribution
+#| fig-cap: "Body mass distribution by species"
+#| fig-width: 10
+#| fig-height: 6
+
+ggplot(penguins, aes(x = body_mass_g, fill = species)) +
+  geom_histogram(alpha = 0.7, bins = 30, position = "identity") +
+  facet_wrap(~species, ncol = 1) +
+  labs(title = "Distribution of Body Mass by Species",
+       x = "Body Mass (g)",
+       y = "Count") +
+  scale_fill_viridis_d() +
+  scale_x_continuous(labels = comma_format()) +
+  theme(legend.position = "none")
+```
+
+### Box Plot Comparison
+
+A box plot gives us a different perspective on the same data:
+
+```{r}
+#| label: fig-boxplot
+#| fig-cap: "Body mass comparison using box plots"
+#| fig-width: 8
+#| fig-height: 6
+
+ggplot(penguins, aes(x = species, y = body_mass_g, fill = species)) +
+  geom_boxplot(alpha = 0.7, width = 0.5) +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  labs(title = "Body Mass Distribution by Species",
+       x = "Species",
+       y = "Body Mass (g)") +
+  scale_fill_viridis_d() +
+  scale_y_continuous(labels = comma_format()) +
+  theme(legend.position = "none")
+```
+
+## Statistical Summary
+
+Let's create a summary table of our findings:
+
+```{r}
+#| label: tbl-summary
+#| tbl-cap: "Summary statistics by species"
+
+penguins %>%
+  group_by(species) %>%
+  summarise(
+    count = n(),
+    avg_bill_length = round(mean(bill_length_mm, na.rm = TRUE), 1),
+    avg_bill_depth = round(mean(bill_depth_mm, na.rm = TRUE), 1),
+    avg_body_mass = round(mean(body_mass_g, na.rm = TRUE), 0),
+    .groups = 'drop'
+  ) %>%
+  knitr::kable(
+    col.names = c("Species", "Count", "Avg Bill Length (mm)", 
+                  "Avg Bill Depth (mm)", "Avg Body Mass (g)"),
+    format.args = list(big.mark = ",")
+  )
+```
+
+## Key Takeaways
+
+From our analysis, we can see that:
+
+1.  **Adelie penguins** have shorter, deeper bills
+2.  **Chinstrap penguins** have longer, thinner bills\
+3.  **Gentoo penguins** are the largest and have intermediate bill proportions
+4.  Each species occupies a distinct ecological niche
+
+::: callout-tip
+## Next Steps
+
+Try modifying the code above with different variables like `flipper_length_mm` or create your own visualizations using other datasets!
+:::
+
+## Resources
+
+-   [ggplot2 documentation](https://ggplot2.tidyverse.org/)
+-   [Palmer Penguins package](https://allisonhorst.github.io/palmerpenguins/)
+-   [R for Data Science](https://r4ds.had.co.nz/)
+
+------------------------------------------------------------------------
+
+*Thanks for reading! Feel free to reach out with questions or suggestions for future posts.*

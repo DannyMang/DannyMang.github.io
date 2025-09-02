@@ -1,0 +1,45 @@
+---
+title: "Welcome to My Data Science Blog"
+page-layout: full
+---
+
+## Hello! 👋
+
+Welcome to my blog where I share insights, tutorials, and discoveries in the world of data science, R, Python, and analytics.
+
+### Recent Posts
+
+::::: grid
+::: {.g-col-12 .g-col-md-6}
+#### [Getting Started with Data Visualization in R](blog-post-example.qmd)
+
+Learn how to create effective visualizations using ggplot2 and the Palmer Penguins dataset.
+
+*January 15, 2024*
+:::
+
+::: {.g-col-12 .g-col-md-6}
+#### [Quarto Examples](example.qmd)
+
+A comprehensive guide to Quarto features including code chunks, markdown, and output formats.
+
+*January 15, 2024*
+:::
+:::::
+
+### About This Blog
+
+This blog focuses on:
+
+-   **Data Visualization** - Creating compelling charts and graphs
+-   **R Programming** - Tips, tricks, and best practices
+-   **Python Analytics** - Data analysis and machine learning
+-   **Reproducible Research** - Using Quarto and R Markdown
+
+### Get In Touch
+
+Feel free to connect with me on [GitHub](https://github.com/yourusername) or [Twitter](https://twitter.com/yourusername).
+
+------------------------------------------------------------------------
+
+*Built with [Quarto](https://quarto.org)*

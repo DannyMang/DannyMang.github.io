@@ -1,0 +1,162 @@
+---
+title: "Example Quarto Document"
+author: "Your Name"
+date: "2024-01-15"
+format: 
+  html:
+    theme: cosmo
+    code-fold: true
+    toc: true
+    toc-depth: 2
+  pdf:
+    documentclass: article
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+# Introduction
+
+This is an example Quarto document that demonstrates various features including code chunks, markdown formatting, and output generation.
+
+## R Code Examples
+
+Here's a simple R code chunk that creates a plot:
+
+```{r}
+#| label: fig-scatter
+#| fig-cap: "A scatter plot of cars data"
+#| fig-width: 8
+#| fig-height: 6
+
+library(ggplot2)
+
+# Create a scatter plot
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point(aes(color = factor(cyl)), size = 3) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Car Weight vs Miles per Gallon",
+       x = "Weight (1000 lbs)",
+       y = "Miles per Gallon",
+       color = "Cylinders") +
+  theme_minimal()
+```
+
+### Data Summary
+
+```{r}
+#| label: tbl-summary
+#| tbl-cap: "Summary statistics for mtcars dataset"
+
+library(knitr)
+library(dplyr)
+
+mtcars %>%
+  summarise(
+    n = n(),
+    mean_mpg = round(mean(mpg), 2),
+    median_mpg = median(mpg),
+    min_mpg = min(mpg),
+    max_mpg = max(mpg)
+  ) %>%
+  kable()
+```
+
+## Python Code Examples
+
+You can also use Python code chunks:
+
+```{python}
+#| label: fig-python
+#| fig-cap: "Python matplotlib example"
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+# Generate sample data
+np.random.seed(42)
+x = np.random.normal(0, 1, 100)
+y = 2 * x + np.random.normal(0, 0.5, 100)
+
+# Create plot
+plt.figure(figsize=(8, 6))
+plt.scatter(x, y, alpha=0.7, color='steelblue')
+plt.xlabel('X values')
+plt.ylabel('Y values')
+plt.title('Python Generated Scatter Plot')
+plt.grid(True, alpha=0.3)
+plt.show()
+```
+
+### Data Analysis with Pandas
+
+```{python}
+# Create a sample dataframe
+data = {
+    'Name': ['Alice', 'Bob', 'Charlie', 'Diana'],
+    'Age': [25, 30, 35, 28],
+    'Score': [85, 92, 78, 96]
+}
+df = pd.DataFrame(data)
+
+print("Sample DataFrame:")
+print(df)
+print(f"\nMean score: {df['Score'].mean():.2f}")
+```
+
+## Markdown Features
+
+### Text Formatting
+
+-   **Bold text**
+-   *Italic text*
+-   `Inline code`
+-   ~~Strikethrough~~
+
+### Lists
+
+1.  First ordered item
+2.  Second ordered item
+    -   Nested unordered item
+    -   Another nested item
+
+### Mathematical Expressions
+
+Inline math: $E = mc^2$
+
+Block math: $$
+\bar{x} = \frac{1}{n} \sum_{i=1}^{n} x_i
+$$
+
+### Callout Blocks
+
+::: callout-note
+This is a note callout block. It's useful for highlighting important information.
+:::
+
+::: callout-warning
+This is a warning callout. Use it to draw attention to potential issues.
+:::
+
+::: callout-tip
+## Pro Tip
+
+This is a tip callout with a custom title. Great for sharing best practices!
+:::
+
+## Cross-references
+
+You can reference figures like @fig-scatter and tables like @tbl-summary.
+
+## Conclusion
+
+This example demonstrates the power of Quarto for creating reproducible documents that combine:
+
+-   Narrative text
+-   Executable code (R, Python, Julia, etc.)
+-   Rich output (plots, tables, etc.)
+-   Professional formatting
+
+The document can be rendered to multiple formats including HTML, PDF, and Word.
