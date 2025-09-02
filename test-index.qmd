@@ -1,0 +1,19 @@
+---
+title: "Test Blog"
+---
+
+# Welcome to My Test Blog
+
+This is a simple test page to verify GitHub Pages deployment is working.
+
+## Test Section
+
+- Item 1
+- Item 2  
+- Item 3
+
+**This should work without any R or Python dependencies.**
+
+## Next Steps
+
+If you can see this page, your GitHub Pages deployment is working correctly!

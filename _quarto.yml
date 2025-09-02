@@ -6,7 +6,7 @@ website:
   title: "My Data Science Blog"
   description: "A blog about data science, R, Python, and analytics"
   site-url: "https://DannyMang.github.io/"
-  repo-url: "https://github.com/DannyMang/blog"
+  repo-url: "https://github.com/DannyMang/DannyMang.github.io"
   repo-actions: [edit, issue]
   
   navbar:
@@ -38,9 +38,7 @@ website:
 
 format:
   html:
-    theme: 
-      light: [cosmo, custom.scss]
-      dark: [cosmo, custom.scss]
+    theme: cosmo
     css: styles.css
     toc: true
     toc-depth: 3
@@ -58,10 +56,11 @@ execute:
   echo: true
   warning: false
   message: false
+  daemon: false
 
 editor: visual
 
 comments:
   giscus:
-    repo: DannyMang/blog-comments
+    repo: DannyMang/DannyMang.github.io
 
