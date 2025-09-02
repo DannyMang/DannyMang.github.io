@@ -20,52 +20,80 @@ execute:
 
 This is an example Quarto document that demonstrates various features including code chunks, markdown formatting, and output generation.
 
-## R Code Examples
+## Python Data Analysis Examples
 
-Here's a simple R code chunk that creates a plot:
+Here's a simple Python code chunk that creates a plot using sample car data:
 
-```{r}
+```{python}
 #| label: fig-scatter
 #| fig-cap: "A scatter plot of cars data"
 #| fig-width: 8
 #| fig-height: 6
 
-library(ggplot2)
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
 
-# Create a scatter plot
-ggplot(mtcars, aes(x = wt, y = mpg)) +
-  geom_point(aes(color = factor(cyl)), size = 3) +
-  geom_smooth(method = "lm", se = FALSE) +
-  labs(title = "Car Weight vs Miles per Gallon",
-       x = "Weight (1000 lbs)",
-       y = "Miles per Gallon",
-       color = "Cylinders") +
-  theme_minimal()
+# Create sample car data similar to mtcars
+np.random.seed(42)
+n_cars = 32
+
+cars_data = {
+    'weight': np.random.uniform(1.5, 5.5, n_cars),
+    'mpg': np.random.uniform(10, 35, n_cars),
+    'cylinders': np.random.choice([4, 6, 8], n_cars)
+}
+
+# Add some correlation between weight and mpg
+cars_data['mpg'] = 35 - 4 * cars_data['weight'] + np.random.normal(0, 2, n_cars)
+cars = pd.DataFrame(cars_data)
+
+# Create scatter plot
+plt.figure(figsize=(10, 6))
+colors = {4: 'blue', 6: 'green', 8: 'red'}
+for cyl in cars['cylinders'].unique():
+    subset = cars[cars['cylinders'] == cyl]
+    plt.scatter(subset['weight'], subset['mpg'], 
+                c=colors[cyl], label=f'{cyl} cylinders', s=60, alpha=0.7)
+
+# Add trend line
+z = np.polyfit(cars['weight'], cars['mpg'], 1)
+p = np.poly1d(z)
+plt.plot(cars['weight'], p(cars['weight']), "k--", alpha=0.8)
+
+plt.xlabel('Weight (1000 lbs)')
+plt.ylabel('Miles per Gallon')
+plt.title('Car Weight vs Miles per Gallon')
+plt.legend(title='Cylinders')
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
 ```
 
 ### Data Summary
 
-```{r}
+```{python}
 #| label: tbl-summary
-#| tbl-cap: "Summary statistics for mtcars dataset"
+#| tbl-cap: "Summary statistics for cars dataset"
 
-library(knitr)
-library(dplyr)
+# Calculate summary statistics
+summary = {
+    'Count': len(cars),
+    'Mean MPG': round(cars['mpg'].mean(), 2),
+    'Median MPG': cars['mpg'].median(),
+    'Min MPG': cars['mpg'].min(),
+    'Max MPG': cars['mpg'].max()
+}
 
-mtcars %>%
-  summarise(
-    n = n(),
-    mean_mpg = round(mean(mpg), 2),
-    median_mpg = median(mpg),
-    min_mpg = min(mpg),
-    max_mpg = max(mpg)
-  ) %>%
-  kable()
+print("Cars Dataset Summary:")
+print("-" * 25)
+for key, value in summary.items():
+    print(f"{key}: {value}")
 ```
 
-## Python Code Examples
+## More Python Examples
 
-You can also use Python code chunks:
+Here are additional Python examples with different libraries:
 
 ```{python}
 #| label: fig-python
