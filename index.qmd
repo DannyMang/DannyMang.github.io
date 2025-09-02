@@ -1,45 +1,65 @@
 ---
-title: "Welcome to My Data Science Blog"
-page-layout: full
+title: "About"
+image: media/profile.jpg
+about:
+    template: jolla
+toc: true
+format:
+    html:
+        anchor-sections: true
+        css: index-styles.css
 ---
 
-## Hello! 👋
+Hi! My name is **[Your Name]**, and I'm a **[Your Title/Role]** at **[Your Company]**. I majored in **[Your Major]** and I have experience in **[Your Specializations]**.
 
-Welcome to my blog where I share insights, tutorials, and discoveries in the world of data science, R, Python, and analytics.
+I have a heavy passion for **[Your Interests]** and **[Your Focus Areas]**. As a result, below you will find some notable articles I've written, projects I've worked on, and technologies I'm passionate about.
 
-### Recent Posts
+<button onclick="window.location.href='#'" class="subscribe-button">Connect With Me</button>
 
-::::: grid
-::: {.g-col-12 .g-col-md-6}
-#### [Getting Started with Data Visualization in R](blog-post-example.qmd)
+## My Blogs
 
-Learn how to create effective visualizations using ggplot2 and the Palmer Penguins dataset.
+Explore this website to learn more! Most of my articles and tutorials can be found in the `/blogs` section.
 
-*January 15, 2024*
-:::
+## Projects
 
-::: {.g-col-12 .g-col-md-6}
-#### [Quarto Examples](example.qmd)
+| | |
+|--------------|---------|
+| [Project Name 1](#) | Brief description of your first project. What technologies did you use? What problem did it solve? What was the impact or outcome? |
+| [Project Name 2](#) | Description of another significant project. Include the tech stack, your role, and key achievements or learnings from the project. |
+| [Project Name 3](#) | Details about a third project that showcases different skills. Mention any collaborations, challenges overcome, or innovations implemented. |
+: {tbl-colwidths="[30,70]"}
 
-A comprehensive guide to Quarto features including code chunks, markdown, and output formats.
+## Technical Skills
 
-*January 15, 2024*
-:::
-:::::
+|  |  |
+|--------------|---------|
+| **Programming Languages** | Python, JavaScript, SQL, [Add your languages] |
+| **Data Science & ML** | pandas, scikit-learn, TensorFlow, PyTorch, [Your ML tools] |
+| **Web Development** | React, Node.js, HTML/CSS, [Your web technologies] |
+| **Tools & Platforms** | Git, Docker, AWS, [Your tools and platforms] |
+| **Databases** | PostgreSQL, MongoDB, [Your database experience] |
+: {tbl-colwidths="[25,75]"}
 
-### About This Blog
+## Publications & Articles
 
-This blog focuses on:
+| | |
+|--------------|---------|
+| [Article Title 1](#) | Brief description of a technical article or blog post you've written. What topic does it cover? What insights does it provide? |
+| [Article Title 2](#) | Description of another publication. Include the publication venue if applicable and the key contributions or findings. |
+| [Article Title 3](#) | Details about additional writing or research work that demonstrates your expertise in your field. |
+: {tbl-colwidths="[30,70]"}
 
--   **Data Visualization** - Creating compelling charts and graphs
--   **R Programming** - Tips, tricks, and best practices
--   **Python Analytics** - Data analysis and machine learning
--   **Reproducible Research** - Using Quarto and R Markdown
+## Open Source Contributions
 
-### Get In Touch
+| **Organization/Project** | **Contribution Type** | 
+| -----------------|------------|
+| [Project Name 1](#) | Description of your contributions - features added, bugs fixed, documentation improved |
+| [Project Name 2](#) | Details about your involvement and the impact of your contributions |
+| [Project Name 3](#) | Summary of your ongoing or past contributions to open source projects |
 
-Feel free to connect with me on [GitHub](https://github.com/yourusername) or [Twitter](https://twitter.com/yourusername).
+## Get In Touch
 
-------------------------------------------------------------------------
-
-*Built with [Quarto](https://quarto.org)*
+- 📧 Email: [your.email@example.com](mailto:your.email@example.com)
+- 💼 LinkedIn: [Your LinkedIn Profile](#)
+- 🐙 GitHub: [Your GitHub Profile](https://github.com/DannyMang)
+- 🐦 Twitter: [Your Twitter Handle](#)

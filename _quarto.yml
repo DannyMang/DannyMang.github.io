@@ -3,7 +3,7 @@ project:
   output-dir: _site
 
 website:
-  title: "My Data Science Blog"
+  title: "Daniel Ung"
   description: "A blog about data science, R, Python, and analytics"
   site-url: "https://DannyMang.github.io/"
   repo-url: "https://github.com/DannyMang/DannyMang.github.io"
@@ -12,28 +12,27 @@ website:
   navbar:
     left:
       - href: index.qmd
-        text: Home
-      - href: about.qmd
         text: About
+      - href: blogs.qmd
+        text: Blogs
     right:
       - icon: github
         href: "https://github.com/DannyMang"
       - icon: twitter
-        href: "https://twitter.com/DannyMang"
-
+        href: "https://twitter.com/danielung19"
   sidebar:
     style: "floating"
     search: true
     contents:
       - href: index.qmd
-        text: "Home"
-      - href: about.qmd
         text: "About"
-      - section: "Examples"
+      - href: blogs.qmd
+        text: "Blog Posts"
+      - section: "Recent Posts"
         contents:
-          - href: blog-post-example.qmd
-            text: "Data Visualization in R"
-          - href: example.qmd
+          - href: blogs/blog-post-example.qmd
+            text: "Data Visualization with Python"
+          - href: blogs/example.qmd
             text: "Quarto Examples"
 
 format:

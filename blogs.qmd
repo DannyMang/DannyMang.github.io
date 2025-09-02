@@ -1,0 +1,20 @@
+---
+title: "Blog Posts"
+page-layout: full
+listing:
+  contents: blogs
+  sort: "date desc"
+  type: default
+  categories: true
+  sort-ui: false
+  filter-ui: false
+format:
+  html:
+    toc: true
+---
+
+Welcome to my blog! Here you'll find articles, tutorials, and insights on various topics I'm passionate about.
+
+## Recent Posts
+
+<!-- The listing will automatically populate here -->
