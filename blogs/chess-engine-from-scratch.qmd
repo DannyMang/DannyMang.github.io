@@ -177,6 +177,7 @@ RANK_8 = 0xFF00000000000000  # a8, b8, c8, ..., h8
 # Diagonal masks
 MAIN_DIAGONAL = 0x8040201008040201  # a1-h8 diagonal
 ANTI_DIAGONAL = 0x0102040810204080  # h1-a8 diagonal
+```
 
 Now for the actual move generation. 
 
