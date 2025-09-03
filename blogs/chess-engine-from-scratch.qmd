@@ -11,8 +11,6 @@ format:
     code-tools: true
 ---
 
-# Building a Chess Engine from Scratch
-
 tl:dr, how to represent a chess game programmatically?
 
 ## Chess Engine Architecture Overview
@@ -43,12 +41,13 @@ class SimpleBoard:
         self.board[row][col] = piece
 ```
 
-### Option 2: Bitboards (More Computationally Effiicient, we are going with this)
+### Option 2: Bitboards (More Computationally Efficient, we are going with this)
 
 ``` python
 class BitBoard:
     def __init__(self):
         # Each piece type gets its own 64-bit integer
+        # We are basically just representing EVERYTHING in chess in 0s and 1s
         self.white_pawns = 0x000000000000FF00
         self.white_knights = 0x0000000000000042
         self.white_bishops = 0x0000000000000024
@@ -71,7 +70,7 @@ Bitmasks. Lots of them. Lets go more into depth about bitboards
 A bitboard uses a 64-bit integer where each bit represents one square on the chess board. 
 
 ```
-Chess Board Layout (Traditional):
+Chess Board Layout:
   a b c d e f g h
 8 ♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜  8
 7 ♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟  7
@@ -92,6 +91,12 @@ Bitboard Square Numbers (0-63):
   40 41 42 43 44 45 46 47   <- a3-h3 (rank 3)
   48 49 50 51 52 53 54 55   <- a2-h2 (rank 2)
   56 57 58 59 60 61 62 63   <- a1-h1 (rank 1)
+  
+ Note: Each bit position represents 2^position. For example:
+ 1000 0001 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000
+ represents 2^63 + 2^56 (bits 63 and 56 are flipped/set to 1)
+
+
 ```
 
 ### Binary Representation Example
@@ -102,6 +107,7 @@ Let's look at the initial white pawns position:
 # White pawns start on rank 2 (squares 48-55)
 white_pawns = 0x000000000000FF00 = 
 # 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 1111 1111 0000 0000 <-- see where the 1's are 
+
 
 # In binary (64 bits): 
 # Bit position: 63 62 61 60 59 58 57 56 55 54 53 52 51 50 49 48 ... 7 6 5 4 3 2 1 0
@@ -119,7 +125,7 @@ white_pawns = 0x000000000000FF00 =
 # 2 1 1 1 1 1 1 1 1  <- White pawns here
 # 1 0 0 0 0 0 0 0 0
 
-#So for BLACK bishops, it would look like this: 
+#So for BLACK bishops, it would look something like this: 
 
 black_bishops = 0x2400000000000000 = 
 # = 0000 0010 0100 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 <-- notice the 1's in the 3rd and 6th positions
@@ -135,400 +141,151 @@ black_bishops = 0x2400000000000000 =
 # 1 0 0 0 0 0 0 0 0
 ```
 
-### Converting Between Square Names and Bit Positions
-
-``` python
-def square_to_bit(square_name):
-    """Convert chess notation (e.g., 'e4') to bit position"""
-    file = ord(square_name[0]) - ord('a')  # a=0, b=1, ..., h=7
-    rank = int(square_name[1]) - 1         # 1=0, 2=1, ..., 8=7
-    return (7 - rank) * 8 + file
-
-def bit_to_square(bit_position):
-    """Convert bit position to chess notation"""
-    file = bit_position % 8
-    rank = 7 - (bit_position // 8)
-    return chr(ord('a') + file) + str(rank + 1)
-
-# Examples:
-print(square_to_bit('e4'))  # Output: 36
-print(bit_to_square(36))    # Output: 'e4'
-print(square_to_bit('a1'))  # Output: 56
-print(bit_to_square(0))     # Output: 'a8'
-```
-
-### Practical Example: Setting and Checking Individual Squares
-
-``` python
-def set_bit(bitboard, square):
-    """Set a bit at the given square"""
-    return bitboard | (1 << square)
-
-def clear_bit(bitboard, square):
-    """Clear a bit at the given square"""
-    return bitboard & ~(1 << square)
-
-def is_bit_set(bitboard, square):
-    """Check if a bit is set at the given square"""
-    return bool(bitboard & (1 << square))
-
-# Example: Let's put a white pawn on e4
-white_pawns = 0x000000000000FF00  # Initial position
-e4_square = square_to_bit('e4')   # Get bit position for e4
-white_pawns = set_bit(white_pawns, e4_square)  # Set the bit
-
-# Now white_pawns represents pawns on rank 2 AND on e4
-print(f"Pawn on e4? {is_bit_set(white_pawns, e4_square)}")  # True
-```
-
-### Visualizing Any Bitboard
-
-Here's a helpful function to visualize any bitboard:
-
-``` python
-def print_bitboard(bitboard):
-    """Print a visual representation of a bitboard"""
-    print("  a b c d e f g h")
-    for rank in range(8):
-        print(f"{8-rank} ", end="")
-        for file in range(8):
-            square = rank * 8 + file
-            if bitboard & (1 << square):
-                print("1 ", end="")
-            else:
-                print("0 ", end="")
-        print(f" {8-rank}")
-    print("  a b c d e f g h")
-
-# Example usage:
-white_pawns = 0x000000000000FF00
-print("White pawns initial position:")
-print_bitboard(white_pawns)
-
-# Output:
-#   a b c d e f g h
-# 8 0 0 0 0 0 0 0 0  8
-# 7 0 0 0 0 0 0 0 0  7
-# 6 0 0 0 0 0 0 0 0  6
-# 5 0 0 0 0 0 0 0 0  5
-# 4 0 0 0 0 0 0 0 0  4
-# 3 0 0 0 0 0 0 0 0  3
-# 2 1 1 1 1 1 1 1 1  2
-# 1 0 0 0 0 0 0 0 0  1
-#   a b c d e f g h
-```
-
-The key insight is that each bit in the 64-bit integer directly corresponds to one square on the chess board, making operations like "find all pawns" or "check if a square is occupied" extremely fast using bitwise operations.
-
-``` python
-   def is_occupied(self, square):
-        """Check if a square is occupied"""
-        return bool((self.all_pieces()) & (1 << square))
-    
-    def all_pieces(self):
-        """Get bitboard of all pieces"""
-        return (self.white_pawns | self.white_knights | self.white_bishops |
-                self.white_rooks | self.white_queens | self.white_king |
-                self.black_pawns | self.black_knights | self.black_bishops |
-                self.black_rooks | self.black_queens | self.black_king)
-```
 
 ## Step 2: Move Generation
 
 Next, we need to generate all legal moves for a given position:
 
+For this part, the following is helpful to know:
+
+We use bitwise operations such as BITWISE OR/AND to what we need. 
+Ex:  We can get all white positions by BITWISE ORing all the white pieces together. 
+
+all_white_positions = white_pawns | white_knights | white_bishops | white_rooks | white_queens | white_king
+So imagine we have white_pawns = 0x000000000000FF00 and white_knights = 0x0000000000000042 .....
+We would get a result of 0x000000000000FF42 ... as well as all the other white pieces together. 
+
+We could also do all_positions = white_positions | black_positions to get all positions on the board. You can kind of see how this is super helpful now.
+
+For each file, we can generate masks that can help us filter moves. 
+Ex: If we want File A or file H, we can represent that as file_A = 0x8080808080808080 and file_H=  0x0101010101010101 , same goes for other diagonals, rows, and columns.
+
+For special cases such as en passant, and castling, we could have a bitmask like castling_rights = 0b1111 representing the 4 possible castling moves (black or white kingside or queenside etc), and flip them when we do castle. 
+
+
+``` python
+# For reference this is kind of what they look like 
+A_FILE = 0x0101010101010101  # a1, a2, a3, ..., a8
+# A_FILE = 0000 0001 0000 0001 0000 0001 0000 0001 0000 0001 0000 0001 0000 0001 0000 0001
+H_FILE = 0x8080808080808080  # h1, h2, h3, ..., h8
+# H_FILE = 1000 0000 1000 0000 1000 0000 1000 0000 1000 0000 1000 0000 1000 0000 1000 0000
+
+# Rank masks (horizontal rows)  
+RANK_1 = 0x00000000000000FF  # a1, b1, c1, ..., h1
+RANK_8 = 0xFF00000000000000  # a8, b8, c8, ..., h8
+
+# Diagonal masks
+MAIN_DIAGONAL = 0x8040201008040201  # a1-h8 diagonal
+ANTI_DIAGONAL = 0x0102040810204080  # h1-a8 diagonal
+
+Now for the actual move generation. 
+
+We can do different things for different pieces. 
+
+For pawns, we can just generate all the possible moves for each pawn. 
+For knights, we can just generate all the possible moves for each knight. 
+etc etc. 
+
+
+This would look something like the following:
+
 ``` python
 class MoveGenerator:
-    def __init__(self, board):
-        self.board = board
-        
-        # Direction vectors for different piece types
-        self.knight_moves = [-21, -19, -12, -8, 8, 12, 19, 21]
-        self.bishop_moves = [-11, -9, 9, 11]
-        self.rook_moves = [-10, -1, 1, 10]
-        self.king_moves = [-11, -10, -9, -1, 1, 9, 10, 11]
-    
-    def generate_moves(self, side):
-        """Generate all legal moves for the given side"""
-        moves = []
-        
-        for square in range(120):
-            piece = self.board.squares[square]
-            if piece == 0 or piece == -1:  # Empty or off-board
-                continue
-                
-            piece_color = 'white' if piece < 0 else 'black'
-            if piece_color != side:
-                continue
-                
-            piece_type = abs(piece)
-            
-            if piece_type == 1:  # Pawn
-                moves.extend(self.generate_pawn_moves(square, piece))
-            elif piece_type == 2:  # Knight
-                moves.extend(self.generate_knight_moves(square, piece))
-            elif piece_type == 3:  # Bishop
-                moves.extend(self.generate_bishop_moves(square, piece))
-            elif piece_type == 4:  # Rook
-                moves.extend(self.generate_rook_moves(square, piece))
-            elif piece_type == 5:  # Queen
-                moves.extend(self.generate_queen_moves(square, piece))
-            elif piece_type == 6:  # King
-                moves.extend(self.generate_king_moves(square, piece))
-        
-        return moves
-    
-    def generate_knight_moves(self, square, piece):
-        """Generate knight moves from a given square"""
-        moves = []
-        
-        for direction in self.knight_moves:
-            target_square = square + direction
-            target_piece = self.board.squares[target_square]
-            
-            if target_piece == -1:  # Off board
-                continue
-                
-            # Can't capture own pieces
-            if (piece > 0 and target_piece > 0) or (piece < 0 and target_piece < 0):
-                continue
-                
-            moves.append(Move(square, target_square, piece, target_piece))
-        
-        return moves
-```
-
-## Step 3: Position Evaluation
-
-The evaluation function determines how "good" a position is:
-
-``` python
-class Evaluator:
     def __init__(self):
-        # Piece values in centipawns
-        self.piece_values = {
-            1: 100,    # Pawn
-            2: 320,    # Knight
-            3: 330,    # Bishop
-            4: 500,    # Rook
-            5: 900,    # Queen
-            6: 20000   # King
-        }
+        # Pre-computed attack masks for different pieces
+        self.knight_attacks = self.generate_knight_attack_table()
+        self.king_attacks = self.generate_king_attack_table()
         
-        # Positional bonus tables
-        self.pawn_table = [
-             0,  0,  0,  0,  0,  0,  0,  0,
-            50, 50, 50, 50, 50, 50, 50, 50,
-            10, 10, 20, 30, 30, 20, 10, 10,
-             5,  5, 10, 25, 25, 10,  5,  5,
-             0,  0,  0, 20, 20,  0,  0,  0,
-             5, -5,-10,  0,  0,-10, -5,  5,
-             5, 10, 10,-20,-20, 10, 10,  5,
-             0,  0,  0,  0,  0,  0,  0,  0
-        ]
-    
-    def evaluate(self, board):
-        """Evaluate the current position"""
-        score = 0
+        # File and rank masks
+        self.file_masks = self.generate_file_masks()
+        self.rank_masks = self.generate_rank_masks()
         
-        for square in range(120):
-            piece = board.squares[square]
-            if piece == 0 or piece == -1:
-                continue
-                
-            piece_type = abs(piece)
-            piece_value = self.piece_values[piece_type]
+    def generate_pawn_moves(self, board, color):
+        """Generate all pawn moves using bitboard operations"""
+        if color == 'white':
+            pawns = board.white_pawns
+            enemies = board.get_black_pieces()
+            all_pieces = board.get_all_pieces()
             
-            # Add material value
-            if piece > 0:  # Black piece
-                score += piece_value
-            else:  # White piece
-                score -= piece_value
+            # Single pawn pushes
+            # pawns << 8 means "shift all pawn bits 8 positions to the left"
+            # This moves each pawn forward by one rank (8 squares = 1 rank)
+            single_pushes = (pawns << 8) & ~all_pieces
             
-            # Add positional bonus
-            if piece_type == 1:  # Pawn
-                board_square = self.convert_to_board_square(square)
-                if piece > 0:  # Black pawn
-                    score += self.pawn_table[board_square]
-                else:  # White pawn
-                    score -= self.pawn_table[63 - board_square]
-        
-        return score if board.side_to_move == 'black' else -score
-```
-
-## Step 4: Search Algorithm (Minimax with Alpha-Beta Pruning)
-
-The heart of the chess engine is the search algorithm:
-
-``` python
-class Searcher:
-    def __init__(self, evaluator, move_generator):
-        self.evaluator = evaluator
-        self.move_generator = move_generator
-        self.nodes_searched = 0
-    
-    def search(self, board, depth, alpha=-float('inf'), beta=float('inf')):
-        """Minimax search with alpha-beta pruning"""
-        self.nodes_searched += 1
-        
-        if depth == 0:
-            return self.evaluator.evaluate(board)
-        
-        moves = self.move_generator.generate_moves(board.side_to_move)
-        
-        if not moves:  # No legal moves
-            if self.is_in_check(board, board.side_to_move):
-                return -20000 + depth  # Checkmate (prefer longer mates)
-            else:
-                return 0  # Stalemate
-        
-        best_score = -float('inf')
-        
-        for move in moves:
-            # Make the move
-            self.make_move(board, move)
+            # Double pawn pushes (only from rank 2)
+            double_pushes = ((single_pushes & 0x0000000000FF0000) << 8) & ~all_pieces
             
-            # Search recursively
-            score = -self.search(board, depth - 1, -beta, -alpha)
+            # Pawn captures (diagonal attacks)
+            left_attacks = ((pawns & ~0x8080808080808080) << 7) & enemies  # Not on H-file
+            right_attacks = ((pawns & ~0x0101010101010101) << 9) & enemies  # Not on A-file
             
-            # Unmake the move
-            self.unmake_move(board, move)
+            return single_pushes | double_pushes | left_attacks | right_attacks
             
-            best_score = max(best_score, score)
-            alpha = max(alpha, score)
+        else:  # black pawns
+            pawns = board.black_pawns
+            enemies = board.get_white_pieces()
+            all_pieces = board.get_all_pieces()
             
-            if beta <= alpha:
-                break  # Alpha-beta cutoff
-        
-        return best_score
-    
-    def find_best_move(self, board, depth):
-        """Find the best move at a given depth"""
-        best_move = None
-        best_score = -float('inf')
-        
-        moves = self.move_generator.generate_moves(board.side_to_move)
-        
-        for move in moves:
-            self.make_move(board, move)
-            score = -self.search(board, depth - 1)
-            self.unmake_move(board, move)
+            # Single pawn pushes (black moves "down" the board)
+            single_pushes = (pawns >> 8) & ~all_pieces
             
-            if score > best_score:
-                best_score = score
-                best_move = move
-        
-        return best_move, best_score
-```
-
-## Step 5: Putting It All Together
-
-``` python
-class ChessEngine:
-    def __init__(self):
-        self.board = Board()
-        self.move_generator = MoveGenerator(self.board)
-        self.evaluator = Evaluator()
-        self.searcher = Searcher(self.evaluator, self.move_generator)
-    
-    def get_best_move(self, depth=4):
-        """Get the best move for the current position"""
-        return self.searcher.find_best_move(self.board, depth)
-    
-    def play_move(self, move):
-        """Play a move on the board"""
-        self.searcher.make_move(self.board, move)
-    
-    def game_loop(self):
-        """Simple game loop for testing"""
-        while True:
-            print(self.display_board())
+            # Double pawn pushes (only from rank 7)
+            # Same as above but the AND is flipped 
+            double_pushes = ((single_pushes & 0x0000FF0000000000) >> 8) & ~all_pieces
             
-            if self.board.side_to_move == 'white':
-                # Human move input
-                move_input = input("Enter your move: ")
-                move = self.parse_move(move_input)
-                if move:
-                    self.play_move(move)
-            else:
-                # Engine move
-                print("Engine thinking...")
-                best_move, score = self.get_best_move(depth=5)
-                print(f"Engine plays: {best_move} (score: {score})")
-                self.play_move(best_move)
-```
-
-## Performance Optimizations
-
-Once you have a basic engine working, consider these optimizations:
-
-### 1. Move Ordering
-
-``` python
-def order_moves(self, moves):
-    """Order moves to improve alpha-beta pruning"""
-    # Captures first, then other moves
-    captures = [m for m in moves if m.captured_piece != 0]
-    quiet_moves = [m for m in moves if m.captured_piece == 0]
-    return captures + quiet_moves
-```
-
-### 2. Transposition Tables
-
-``` python
-class TranspositionTable:
-    def __init__(self, size=10000000):
-        self.table = {}
-        self.size = size
-    
-    def store(self, position_hash, depth, score, move):
-        if len(self.table) < self.size:
-            self.table[position_hash] = {
-                'depth': depth,
-                'score': score,
-                'best_move': move
-            }
-```
-
-### 3. Iterative Deepening
-
-``` python
-def iterative_deepening_search(self, board, max_depth, time_limit):
-    """Search with increasing depth until time runs out"""
-    best_move = None
-    start_time = time.time()
-    
-    for depth in range(1, max_depth + 1):
-        if time.time() - start_time > time_limit:
-            break
+            # Pawn captures
+            left_attacks = ((pawns & ~0x0101010101010101) >> 7) & enemies  # Not on A-file
+            right_attacks = ((pawns & ~0x8080808080808080) >> 9) & enemies  # Not on H-file
             
-        move, score = self.find_best_move(board, depth)
-        best_move = move
-        print(f"Depth {depth}: {move} (score: {score})")
-    
-    return best_move
-```
+            return single_pushes | double_pushes | left_attacks | right_attacks
 
-## Next Steps and Improvements
+``` 
 
-Your basic chess engine is now complete! Here are some advanced features to consider:
+What about sliding pieces? Rooks? Bishops? Queens? These pieces are kind of difficult to represent since pieces in the way of their sliding attack effectively blocks a lot of their paths. Much harder to compute.
 
-1.  **Opening Book** - Store common opening moves
-2.  **Endgame Tablebase** - Perfect play in simple endgames
-3.  **Advanced Evaluation** - King safety, pawn structure, piece mobility
-4.  **Search Extensions** - Check extensions, pawn promotion extensions
-5.  **Multi-threading** - Parallel search algorithms
-6.  **UCI Protocol** - Interface with chess GUIs
+This is where we bring in the "magic" bitboards. Josh Watzman's article https://essays.jwatzman.org/essays/chess-move-generation-with-magic-bitboards.html explains this in detail. 
 
-## Resources for Further Learning
+Basically, we just construct a giant hashtable for all the moves made by those pieces. Thats the magic. 
 
--   **Chess Programming Wiki** - Comprehensive resource for chess programming
--   **Stockfish Source Code** - Study the world's strongest open-source engine
--   **Computer Chess Forums** - Connect with other chess programmers
--   **Testing Suites** - EPD test positions to benchmark your engine
+For Kings and Knights, they're moves are fixed. Much easier to compute. No need for magic bitboards with them. 
 
-Building a chess engine is a rewarding project that teaches fundamental CS concepts while creating something that can actually play chess! Start simple and gradually add complexity as you understand each component better.
+
+
+## Step 3 : RL application in Chess
+
+Okay I am skipping over a bunch of the bitboard stuff but the top part should be sufficient enough to get an idea.
+
+
+TO-DO
+
+
+## Sources and References
+
+### Technical Resources
+- **Chess Programming Wiki** - [Comprehensive resource for chess programming](https://www.chessprogramming.org/)
+- **Magic Bitboards Explained** - [Josh Watzman's detailed article](https://essays.jwatzman.org/essays/chess-move-generation-with-magic-bitboards.html)
+- **Stockfish Source Code** - [World's strongest open-source engine](https://github.com/official-stockfish/Stockfish)
+- **Bitboard Basics** - [Chess Programming Wiki Bitboards](https://www.chessprogramming.org/Bitboards)
+
+### Academic Papers
+- **Computer Chess Programming** - Shannon, Claude (1950). "Programming a Computer for Playing Chess"
+- **Alpha-Beta Pruning** - Knuth, Donald & Moore, Ronald (1975). "An analysis of alpha-beta pruning"
+
+### Community and Forums
+- **Computer Chess Club** - [Active community of chess programmers](http://www.talkchess.com/)
+- **Chess Programming Discord** - Real-time discussions and help
+- **Reddit r/ComputerChess** - [Chess programming community](https://reddit.com/r/ComputerChess)
+
+### Testing and Benchmarking
+- **Perft Testing** - [Move generation verification](https://www.chessprogramming.org/Perft)
+- **EPD Test Suites** - [Engine testing positions](https://www.chessprogramming.org/Extended_Position_Description)
+- **CCRL Rating Lists** - [Computer Chess Rating Lists](https://ccrl.chessdom.com/)
+
+### Historical Context
+- **Deep Blue vs Kasparov** - IBM's historic chess computer match (1997)
+- **Shannon's Paper** - The foundational work on computer chess (1950)
+- **Belle and Cray Blitz** - Early chess computers that shaped the field
 
 ------------------------------------------------------------------------
 
-*Happy coding! Feel free to reach out if you have questions about any part of the implementation.*
+*Happy coding! Feel free to reach out to me to discuss further!*
