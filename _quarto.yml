@@ -30,10 +30,8 @@ website:
         text: "Blog Posts"
       - section: "Recent Posts"
         contents:
-          - href: blogs/blog-post-example.qmd
-            text: "Data Visualization with Python"
-          - href: blogs/example.qmd
-            text: "Quarto Examples"
+          - href: blogs/chess-engine-from-scratch.qmd
+            text: "Building a Chess Engine from Scratch"
 
 format:
   html:
