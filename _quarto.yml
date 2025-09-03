@@ -62,4 +62,8 @@ editor: visual
 comments:
   giscus:
     repo: DannyMang/DannyMang.github.io
+    category: General
+    mapping: title
+    reactions-enabled: true
+    input-position: top
 
