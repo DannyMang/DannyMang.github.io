@@ -240,7 +240,7 @@ class MoveGenerator:
             
             return single_pushes | double_pushes | left_attacks | right_attacks
 
-``` 
+```
 
 What about sliding pieces? Rooks? Bishops? Queens? These pieces are kind of difficult to represent since pieces in the way of their sliding attack effectively blocks a lot of their paths. Much harder to compute.
 
