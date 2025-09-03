@@ -10,11 +10,9 @@ format:
         css: index-styles.css
 ---
 
-Hi! My name is **[Your Name]**, and I'm a **[Your Title/Role]** at **[Your Company]**. I majored in **[Your Major]** and I have experience in **[Your Specializations]**.
+Hi! My name is **Daniel Ung**, and I'm currently an **Undergrad CS student** at **San Jose State University**.
 
-I have a heavy passion for **[Your Interests]** and **[Your Focus Areas]**. As a result, below you will find some notable articles I've written, projects I've worked on, and technologies I'm passionate about.
-
-<button onclick="window.location.href='#'" class="subscribe-button">Connect With Me</button>
+Currently learning more about Reinforcement Learning and Distributed Training. I believe that making distributed training accessible to all will enable the next wave of what is considered possible with AI. 
 
 ## My Blogs
 
@@ -24,42 +22,14 @@ Explore this website to learn more! Most of my articles and tutorials can be fou
 
 | | |
 |--------------|---------|
-| [Project Name 1](#) | Brief description of your first project. What technologies did you use? What problem did it solve? What was the impact or outcome? |
-| [Project Name 2](#) | Description of another significant project. Include the tech stack, your role, and key achievements or learnings from the project. |
-| [Project Name 3](#) | Details about a third project that showcases different skills. Mention any collaborations, challenges overcome, or innovations implemented. |
+| [Supersonic](https://github.com/DannyMang/supersonic) | Brief description of your first project. What technologies did you use? What problem did it solve? What was the impact or outcome? |
+| [Chess Engine](https://github.com/DannyMang/chessBot) | Description of another significant project. Include the tech stack, your role, and key achievements or learnings from the project. |
+| [Manim Generator](https://huggingface.co/haidangung/qwen3-manim-16bit) | Math animation library, finetuned with Qwen 3 1.7B on Unsloth! |
 : {tbl-colwidths="[30,70]"}
-
-## Technical Skills
-
-|  |  |
-|--------------|---------|
-| **Programming Languages** | Python, JavaScript, SQL, [Add your languages] |
-| **Data Science & ML** | pandas, scikit-learn, TensorFlow, PyTorch, [Your ML tools] |
-| **Web Development** | React, Node.js, HTML/CSS, [Your web technologies] |
-| **Tools & Platforms** | Git, Docker, AWS, [Your tools and platforms] |
-| **Databases** | PostgreSQL, MongoDB, [Your database experience] |
-: {tbl-colwidths="[25,75]"}
-
-## Publications & Articles
-
-| | |
-|--------------|---------|
-| [Article Title 1](#) | Brief description of a technical article or blog post you've written. What topic does it cover? What insights does it provide? |
-| [Article Title 2](#) | Description of another publication. Include the publication venue if applicable and the key contributions or findings. |
-| [Article Title 3](#) | Details about additional writing or research work that demonstrates your expertise in your field. |
-: {tbl-colwidths="[30,70]"}
-
-## Open Source Contributions
-
-| **Organization/Project** | **Contribution Type** | 
-| -----------------|------------|
-| [Project Name 1](#) | Description of your contributions - features added, bugs fixed, documentation improved |
-| [Project Name 2](#) | Details about your involvement and the impact of your contributions |
-| [Project Name 3](#) | Summary of your ongoing or past contributions to open source projects |
 
 ## Get In Touch
 
-- 📧 Email: [your.email@example.com](mailto:your.email@example.com)
-- 💼 LinkedIn: [Your LinkedIn Profile](#)
-- 🐙 GitHub: [Your GitHub Profile](https://github.com/DannyMang)
-- 🐦 Twitter: [Your Twitter Handle](#)
+- 📧 Email: [daniel.haidang.ung@gmail.com](mailto:daniel.haidang.ung@gmail.com)
+- 💼 LinkedIn: [Daniel Ung](https://linkedin.com/in/danielung22)
+- 🐙 GitHub: [DannyMang](https://github.com/DannyMang)
+- 🐦 Twitter: [@danielung19](https://x.com/danielung19)
