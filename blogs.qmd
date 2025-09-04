@@ -13,7 +13,7 @@ format:
     toc: true
 ---
 
-Welcome to my blog! Here you'll find articles, tutorials, and insights on various topics I'm passionate about.
+Welcome to my blog! This will serve as a repository for my thoughts and learnings from projects, life, or whatever else that is really not that worth talking about. 
 
 ## Recent Posts
 

@@ -1,6 +1,6 @@
 ---
 title: "About"
-image: media/profile.jpg
+image: media/fmaGIF.gif
 about:
     template: jolla
 toc: true
@@ -12,7 +12,7 @@ format:
 
 Hi! My name is **Daniel Ung**, and I'm currently an **Undergrad CS student** at **San Jose State University**.
 
-Currently learning more about Reinforcement Learning and Distributed Training. I believe that making distributed training accessible to all will enable the next wave of what is considered possible with AI. 
+Currently learning more about Reinforcement Learning and Distributed Training. A core belief: Cheaper AI and lower hardware requirements to democratize access to SOTA capabilities, giving everyone the opportunity to push humanity's limits.
 
 ## My Blogs
 
@@ -22,14 +22,14 @@ Explore this website to learn more! Most of my articles and tutorials can be fou
 
 | | |
 |--------------|---------|
-| [Supersonic](https://github.com/DannyMang/supersonic) | Brief description of your first project. What technologies did you use? What problem did it solve? What was the impact or outcome? |
-| [Chess Engine](https://github.com/DannyMang/chessBot) | Description of another significant project. Include the tech stack, your role, and key achievements or learnings from the project. |
-| [Manim Generator](https://huggingface.co/haidangung/qwen3-manim-16bit) | Math animation library, finetuned with Qwen 3 1.7B on Unsloth! |
+| [Supersonic](https://github.com/DannyMang/supersonic) | [Work in Progress] Aimed to make a mini finetuning library to quantize models |
+| [Chess Engine](https://github.com/DannyMang/chessBot) | Wanted to see how high ELO I can reach with the compute power of a potato |
+| [Manim Generator](https://huggingface.co/haidangung/qwen3-manim-16bit) | Math animation library, finetuned with Qwen 3 1.7B on Unsloth! Looking to try out bigger model currently! |
 : {tbl-colwidths="[30,70]"}
 
 ## Get In Touch
 
-- 📧 Email: [daniel.haidang.ung@gmail.com](mailto:daniel.haidang.ung@gmail.com)
-- 💼 LinkedIn: [Daniel Ung](https://linkedin.com/in/danielung22)
-- 🐙 GitHub: [DannyMang](https://github.com/DannyMang)
-- 🐦 Twitter: [@danielung19](https://x.com/danielung19)
+ 📧 Email: [daniel.haidang.ung@gmail.com](mailto:daniel.haidang.ung@gmail.com)
+ 💼 LinkedIn: [Daniel Ung](https://linkedin.com/in/danielung22)
+ 🐙 GitHub: [DannyMang](https://github.com/DannyMang)
+ 🐦 Twitter: [@danielung19](https://x.com/danielung19)
