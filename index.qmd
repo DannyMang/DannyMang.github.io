@@ -12,7 +12,7 @@ format:
 
 Hi! My name is **Daniel Ung**, and I'm currently an **Undergrad CS student** at **San Jose State University**.
 
-Currently learning more about Reinforcement Learning and Distributed Training. A core belief: Cheaper AI and lower hardware requirements to democratize access to SOTA capabilities, giving everyone the opportunity to push humanity's limits.
+Currently learning more about Reinforcement Learning and Distributed Training. I want to contribute to making cheaper AI and lowering the hardware requirements to democratize access to SOTA capabilities, giving everyone the opportunity to push what is possible.
 
 ## My Blogs
 
