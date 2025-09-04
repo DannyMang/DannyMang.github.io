@@ -1,9 +1,8 @@
 ---
 title: "Building a Chess Engine from Scratch"
 author: "Daniel Ung"
-date: "2024-01-16"
+date: "2025-09-03"
 categories: [chess, ai, algorithms, python]
-image: "chess-preview.jpg"
 draft: false
 format:
   html:
@@ -41,7 +40,7 @@ class SimpleBoard:
         self.board[row][col] = piece
 ```
 
-### Option 2: Bitboards (More Computationally Efficient, we are going with this)
+### Option 2: Bitboards (More Computationally Efficient, let's go with this)
 
 ``` python
 class BitBoard:
@@ -144,7 +143,7 @@ black_bishops = 0x2400000000000000 =
 
 ## Step 2: Move Generation
 
-Next, we need to generate all legal moves for a given position:
+Next, we need to generate all legal moves for each piece. That way, when a user moves a piece, it just has to fall into the set of legal moves. 
 
 For this part, the following is helpful to know:
 
@@ -242,50 +241,149 @@ class MoveGenerator:
 
 ```
 
-What about sliding pieces? Rooks? Bishops? Queens? These pieces are kind of difficult to represent since pieces in the way of their sliding attack effectively blocks a lot of their paths. Much harder to compute.
+**What about sliding pieces? Rooks? Bishops? Queens?** These pieces are kind of difficult to represent since pieces in the way of their sliding attack effectively blocks a lot of their paths. Much harder to compute.
 
-This is where we bring in the "magic" bitboards. Josh Watzman's article https://essays.jwatzman.org/essays/chess-move-generation-with-magic-bitboards.html explains this in detail. 
+This is where we bring in the "magic" bitboards. [Josh Watzman's article](https://essays.jwatzman.org/essays/chess-move-generation-with-magic-bitboards.html) explains this in detail. 
 
-Basically, we just construct a giant hashtable for all the moves made by those pieces. Thats the magic. 
+Basically, we just construct a giant hashtable for all the moves made by those pieces. Pretty magical. 
 
-For Kings and Knights, they're moves are fixed. Much easier to compute. No need for magic bitboards with them. 
+For Kings and Knights, their moves are fixed. Much easier to compute. No need for magic bitboards with them. 
 
+Won't go over details on how to implement checkmate, stalement, and the rest of it (will leave sources down below if you wish to do so) but after you finish building your chess board representation
+you can basically run a [perft test](https://www.chessprogramming.org/Perft_Results). Given these starting positions, you generate all legal moves going into X depth in and your #'s should match
+with the following results from the source.
 
 
 ## Step 3 : RL application in Chess
 
-Okay I am skipping over a bunch of the bitboard stuff but the top part should be sufficient enough to get an idea.
+Okay I am skipping over a bunch of the bitboard implementation but the top part should be sufficient enough to get an idea of what to do.
+
+How do we build out the chess engine to think now? 
+
+Our first option looks like the following: Source: [stack_overflow](https://stackoverflow.com/questions/68684989/how-to-implement-a-minimax-algorithm-in-a-chess-like-game)
+``` python
+
+def minimax(pos, depth, alpha, beta, maximizingPlayer) :
+# maximizingPlayer = True if White2Play and False is Black2Play
+
+if depth == 0 or game_is_finished(board) or can_t_move(board) :
+    return evaluate(board)                                     # <- zero ground for recusivity
+
+if maximizingPlayer :
+    maxEval = -infinity(or a number smaller than your smallest evaluation)
+    for child in child_of_position(board) :
+        evalu = minimax(child, depth - 1, alpha, beta, False)  # recursivity
+        maxEval = max(maxEval, evalu)
+        alpha = max(alpha, evalu)
+        if beta <= alpha :
+            break
+    return maxEval
+
+else :
+    minEval = infinity(or a number larger than your largest evaluation)
+    for child in child_of_position(board) :
+        evalu = minimax(child, depth - 1, alpha, beta, True)    # recursivity
+        minEval = min(minEval, evalu)
+        alpha = min(alpha, evalu)
+        if beta <= alpha :
+            break
+    return minEval
+```
+
+Basically, it's just recursive DFS where we are looking into the future of whether or not a state would result in a loss or win. Of course, this becomes problematic when we try 
+to calculate all of the 10^120 possible game states. We can prune branches that are obviously bad states such as ones where we would hang the queen. 
+
+Moving onto other implementations, what about AlphaZero? How do we implement that?
+
+As a reference, [this guide](https://www.depthfirstlearning.com/2018/AlphaGoZero) is absolutely golden to understand everything starting from minimax. It then goes on to explain prequisites to understanding AlphaZero, starting from Multi-armed 
+bandits + Upper Confidence bound (UCB) -> Policy and Value Functions  -> Monte Carlo Search Tree (MCTS) + Upper confidence bound for Trees (UCT).
+
+Building off a lot of what was said in the above guide, here is basically what we need to build it:
+- MCTS 
+- The policy/value approximation network
+- 5,000 first-generation TPUs to generate self-play games and 64 second-generation TPUs to train the neural networks 
+
+We aren't trying to make the next Magnus Carlsen so lets just try our best with what we have: 
+
+A general overview of MCTS would have the following steps: 
+Selection: Select child node from the current node based on the tree policy.
+Expansion: Expand the child node based on the exploration / exploitation trade-off.
+Simulation: Simulate from the child node until termination or upon reaching a suitably small future reward (like from reward decay).
+Backup: Backup the reward along the path taken according to the tree policy.
 
 
-TO-DO
+How does this work for us?
+Let's denote a node as a game state: so something like r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1    (FEN representation)
+
+In traditional MCTS, we use the UCB formula denoted as: argmax(Q(s,a) + C * sqrt(ln(N(s)) / N(s,a))), where Q(s,a) = average reward/value, C = exploration constant,
+N(s) = total number of times parent node s has been visited, and N(s,a) = number of times action a has been taken from state s.
+
+This balances exploitation: Q(s,a) - favors actions that have historically performed well
+And exploration: C * sqrt(ln(N(s)) / N(s,a)) - favors actions that have been tried less frequently
+
+In [the variation that alphazero introduces](https://groups.google.com/g/computer-go-archive/c/K9XHb64JSqU), we now have PUCT (Predictor + UCT)
+argmax((Q(s,a) + Cpuct * P(s,a) * sqrt( lg(N(s)) / (1 + N(s,a)))))
+
+Now where the hell did P(s,a) come from? 
+
+**This is where part 2/ the policy and value approximation network comes into play**
+
+We need a network that will take in an input of a game state, and output the probability distributions of next possible actions + estimated value of current state.
+Your implementation may look like the following: 
+
+``` python
+class SimplePolicyValueNetwork(nn.Module):
+    """
+    A very simple policy-value network for demonstration purposes.
+    This network takes a game state as input and outputs:
+    1. Policy: probability distribution over possible actions
+    2. Value: estimated value of the current state
+    """
+    def __init__(self, input_size, action_size, hidden_size=128):
+        super(SimplePolicyValueNetwork, self).__init__()
+        self.shared_fc1 = nn.Linear(input_size, hidden_size)
+        self.shared_fc2 = nn.Linear(hidden_size, hidden_size)
+        self.policy_head = nn.Linear(hidden_size, action_size)
+        self.value_head = nn.Linear(hidden_size, 1)
+
+    def forward(self, x):
+        x = F.relu(self.shared_fc1(x))
+        shared_features = F.relu(self.shared_fc2(x))
+        
+        # Policy output (probabilities over actions)
+        policy_logits = self.policy_head(shared_features)
+        policy = F.softmax(policy_logits, dim=-1)
+        
+        # Value output (single scalar between -1 and 1)
+        value = torch.tanh(self.value_head(shared_features))
+        
+        return policy, value
+
+``` 
+
+And so we have an output of dimensione [1,action_size] for the policy and value dimensions = [1, 1], representing good/bad
+
+When MCTS visits new state -> run the approximation network
+We now have probability distribution for each possible action + how good they are. We plug that into our formula above, and now we tell the PUCT formula that these new moves look kinda good
+
+And that's basically it. As for the results you can look at [my project here](https://github.com/DannyMang/chessBot) and [my wandb runs here](https://wandb.ai/daniel-ung-19/chess-alphazero-tinygrad?nw=nwuserdanielung) for whatever 
+For whatever reason the runs keep crashing around the 10 hour mark, but I guess that is my divine punishment for trying to run it on a regular M3 w/ 8 GB of RAM. Will pick this back up to see the performance + bug fix.
 
 
 ## Sources and References
 
-### Technical Resources
-- **Chess Programming Wiki** - [Comprehensive resource for chess programming](https://www.chessprogramming.org/)
+### Chess Engine Implementation
 - **Magic Bitboards Explained** - [Josh Watzman's detailed article](https://essays.jwatzman.org/essays/chess-move-generation-with-magic-bitboards.html)
-- **Stockfish Source Code** - [World's strongest open-source engine](https://github.com/official-stockfish/Stockfish)
-- **Bitboard Basics** - [Chess Programming Wiki Bitboards](https://www.chessprogramming.org/Bitboards)
+- **Perft Test Results** - [Move generation verification](https://www.chessprogramming.org/Perft_Results)
+- **Minimax Implementation** - [Stack Overflow discussion](https://stackoverflow.com/questions/68684989/how-to-implement-a-minimax-algorithm-in-a-chess-like-game)
 
-### Academic Papers
-- **Computer Chess Programming** - Shannon, Claude (1950). "Programming a Computer for Playing Chess"
-- **Alpha-Beta Pruning** - Knuth, Donald & Moore, Ronald (1975). "An analysis of alpha-beta pruning"
+### AlphaZero and Reinforcement Learning
+- **AlphaGoZero Guide** - [Depth First Learning comprehensive tutorial](https://www.depthfirstlearning.com/2018/AlphaGoZero)
+- **PUCT Variation** - [Computer-Go Archive discussion](https://groups.google.com/g/computer-go-archive/c/K9XHb64JSqU)
 
-### Community and Forums
-- **Computer Chess Club** - [Active community of chess programmers](http://www.talkchess.com/)
-- **Chess Programming Discord** - Real-time discussions and help
-- **Reddit r/ComputerChess** - [Chess programming community](https://reddit.com/r/ComputerChess)
-
-### Testing and Benchmarking
-- **Perft Testing** - [Move generation verification](https://www.chessprogramming.org/Perft)
-- **EPD Test Suites** - [Engine testing positions](https://www.chessprogramming.org/Extended_Position_Description)
-- **CCRL Rating Lists** - [Computer Chess Rating Lists](https://ccrl.chessdom.com/)
-
-### Historical Context
-- **Deep Blue vs Kasparov** - IBM's historic chess computer match (1997)
-- **Shannon's Paper** - The foundational work on computer chess (1950)
-- **Belle and Cray Blitz** - Early chess computers that shaped the field
+### Project Implementation
+- **My Chess Engine Project** - [GitHub repository](https://github.com/DannyMang/chessBot)
+- **Training Runs and Results** - [Weights & Biases dashboard](https://wandb.ai/daniel-ung-19/chess-alphazero-tinygrad?nw=nwuserdanielung)
 
 ------------------------------------------------------------------------
 
