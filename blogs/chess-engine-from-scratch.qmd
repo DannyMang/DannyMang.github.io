@@ -10,7 +10,7 @@ format:
     code-tools: true
 ---
 
-tl:dr, how to represent a chess game programmatically?
+tl;dr, how to represent a chess game programmatically?
 
 ## Chess Engine Architecture Overview
 
@@ -147,7 +147,7 @@ Next, we need to generate all legal moves for each piece. That way, when a user 
 
 For this part, the following is helpful to know:
 
-We use bitwise operations such as BITWISE OR/AND to what we need. 
+We use bitwise operations such as BITWISE OR/AND to get what we need. 
 Ex:  We can get all white positions by BITWISE ORing all the white pieces together. 
 
 all_white_positions = white_pawns | white_knights | white_bishops | white_rooks | white_queens | white_king
@@ -241,7 +241,7 @@ class MoveGenerator:
 
 ```
 
-**What about sliding pieces? Rooks? Bishops? Queens?** These pieces are kind of difficult to represent since pieces in the way of their sliding attack effectively blocks a lot of their paths. Much harder to compute.
+**What about sliding pieces? Rooks? Bishops? Queens?** These pieces are difficult to represent since pieces in the way of their sliding attack effectively blocks a lot of their paths. Much harder to compute.
 
 This is where we bring in the "magic" bitboards. [Josh Watzman's article](https://essays.jwatzman.org/essays/chess-move-generation-with-magic-bitboards.html) explains this in detail. 
 
@@ -368,7 +368,7 @@ When MCTS visits new state -> run the approximation network
 We now have probability distribution for each possible action + how good they are. We plug that into our formula above, and now we tell the PUCT formula that these new moves look kinda good
 
 And that's basically it. As for the results you can look at [my project here](https://github.com/DannyMang/chessBot) and [my wandb runs here](https://wandb.ai/daniel-ung-19/chess-alphazero-tinygrad?nw=nwuserdanielung) for whatever 
-For whatever reason the runs keep crashing around the 10 hour mark, but I guess that is my divine punishment for trying to run it on a regular M3 w/ 8 GB of RAM. Will pick this back up to see the performance + bug fix.
+For whatever reason the runs keep crashing around the 10 hour mark, but I guess that is my divine punishment for trying to run it on a regular M3 w/ 8 GB of RAM. Will pick this back up when I gain a bazillion of GPU credits to see the performance + bug fix.
 
 
 ## Sources and References
