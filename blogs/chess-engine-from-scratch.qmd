@@ -290,6 +290,7 @@ else :
     return minEval
 ```
 
+
 Basically, it's just recursive DFS where we are looking into the future of whether or not a state would result in a loss or win. Of course, this becomes problematic when we try 
 to calculate all of the 10^120 possible game states. We can prune branches that are obviously bad states such as ones where we would hang the queen. 
 
