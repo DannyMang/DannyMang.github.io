@@ -367,7 +367,7 @@ And so we have an output of dimensione [1,action_size] for the policy and value 
 When MCTS visits new state -> run the approximation network
 We now have probability distribution for each possible action + how good they are. We plug that into our formula above, and now we tell the PUCT formula that these new moves look kinda good
 
-And that's basically it. As for the results you can look at [my project here](https://github.com/DannyMang/chessBot) and [my wandb runs here](https://wandb.ai/daniel-ung-19/chess-alphazero-tinygrad?nw=nwuserdanielung) for whatever 
+And that's basically it. As for the results you can look at [my project here](https://github.com/DannyMang/chessBot)
 For whatever reason the runs keep crashing around the 10 hour mark, but I guess that is my divine punishment for trying to run it on a regular M3 w/ 8 GB of RAM. Will pick this back up when I gain a bazillion of GPU credits to see the performance + bug fix.
 
 
@@ -384,7 +384,6 @@ For whatever reason the runs keep crashing around the 10 hour mark, but I guess 
 
 ### Project Implementation
 - **My Chess Engine Project** - [GitHub repository](https://github.com/DannyMang/chessBot)
-- **Training Runs and Results** - [Weights & Biases dashboard](https://wandb.ai/daniel-ung-19/chess-alphazero-tinygrad?nw=nwuserdanielung)
 
 ------------------------------------------------------------------------
 
