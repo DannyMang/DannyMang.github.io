@@ -24,7 +24,7 @@ Explore this website to learn more! Most of my articles and tutorials can be fou
 |--------------|---------|
 | [MORE-COMPUTE](https://github.com/DannyMang/more-compute) | uv tool install more-compute |
 | [Chess Engine](https://github.com/DannyMang/chessBot) | Wanted to see how high ELO I can reach with the compute power of a potato |
-| [Manim Generator](https://huggingface.co/haidangung/qwen3-manim-16bit) | Math animation library, finetuned with Qwen 3 1.7B on Unsloth! Looking to try out bigger model currently! |
+| [Manim Generator](https://huggingface.co/haidangung/qwen3-manim-16bit) | Math animation library, finetuned with Qwen 3 1.7B on Unsloth! Looking to try doing same thing but on >70B param model [here](https://github.com/DannyMang/qwen-manim) |
 : {tbl-colwidths="[30,70]"}
 
 ## Get In Touch
